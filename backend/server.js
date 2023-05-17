@@ -7,7 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
-
+const proxy = require("express-http-proxy");
 dotenv.config();
 
 connectDB();
@@ -27,10 +27,18 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+
+app.use(
+  "/api", // Path to proxy
+  proxy("http://localhost:5000") // URL of your server
+);
+
 const server = app.listen(
   PORT,
   console.log(`Server Start on PORT ${PORT}`.yellow.bold)
 );
+
+
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,

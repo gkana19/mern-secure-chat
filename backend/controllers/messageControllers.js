@@ -40,7 +40,21 @@ const sendMessage = asyncHandler(async (req, res) => {
 
 const allMessage = asyncHandler(async (req, res) => {
   try {
-    const messages = await Message.find({ chat: req.params.chatId })
+    const chatId = req.params.chatId;
+    const userId = req.user._id; // Get the authenticated user's ID
+
+    // Check if the user is a member of the chat
+    const isMember = await Chat.exists({
+      _id: chatId,
+      users: userId
+    });
+
+    if (!isMember) {
+      res.status(403);
+      throw new Error('Access denied. User is not a member of the chat.');
+    }
+
+    const messages = await Message.find({ chat: chatId })
       .populate("sender", "name pic email")
       .populate("chat");
 
