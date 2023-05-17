@@ -41,9 +41,9 @@ const Signup = () => {
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
-      data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "da8le1tmu");
-      fetch("https://api.cloudinary.com/v1_1/da8le1tmu/image/upload", {
+      data.append("upload_preset", "ChatApp");
+      data.append("cloud_name", "stangcloud");
+      fetch("https://api.cloudinary.com/v1_1/stangcloud/image/upload", {
         method: "post",
         body: data,
       })
@@ -59,7 +59,7 @@ const Signup = () => {
         });
     } else {
       toast({
-        title: "Please Select an Image!",
+        title: "Please Select JPG OR PNG!",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -183,13 +183,13 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
 
-      <FormControl id="pic" isDisabled="true">
+      <FormControl id="pic" >
         <FormLabel>Upload Your Picture</FormLabel>
         <Input
           type="file"
           p={1.5}
           accept="image/*"
-          onChange={(e) => postDetails(e.target.value[0])}
+          onChange={(e) => postDetails(e.target.files[0])}
         />
       </FormControl>
 
