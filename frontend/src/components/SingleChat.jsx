@@ -20,7 +20,6 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 import CryptoJS from "crypto-js"; // Import the crypto-js library
 
-
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
@@ -53,19 +52,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         config
       );
 
-       // Decrypt the messages
-    const decryptedMessages = data.map((message) => {
-      const decryptedContent = CryptoJS.AES.decrypt(
-        message.content,
-        "encryptionSecretKey"
-      ).toString(CryptoJS.enc.Utf8);
+      // Decrypt the messages
+      const decryptedMessages = data.map((message) => {
+        const decryptedContent = CryptoJS.AES.decrypt(
+          message.content,
+          import.meta.env.VITE_SECRET_KEY
+        ).toString(CryptoJS.enc.Utf8);
 
-      return {
-        ...message,
-        content: decryptedContent,
-      };
-    });
-      
+        return {
+          ...message,
+          content: decryptedContent,
+        };
+      });
+
       setMessages(decryptedMessages);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
@@ -123,11 +122,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
         };
 
-         // Encrypt the message using AES
-      const encryptedMessage = CryptoJS.AES.encrypt(
-        newMessage,
-        "encryptionSecretKey"
-      ).toString();
+        // Encrypt the message using AES
+        const encryptedMessage = CryptoJS.AES.encrypt(
+          newMessage,
+          import.meta.env.VITE_SECRET_KEY
+        ).toString();
 
         setNewMessage("");
         const { data } = await axios.post(
@@ -138,18 +137,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-        
-          // Decrypt the received message
-      const decryptedMessage = CryptoJS.AES.decrypt(
-        data.content,
-        "encryptionSecretKey"
-      ).toString(CryptoJS.enc.Utf8);
-      socket.emit("new message", data);
-      data.content = decryptedMessage; // Update the message content to decrypted value
+
+        // Decrypt the received message
+        const decryptedMessage = CryptoJS.AES.decrypt(
+          data.content,
+          import.meta.env.VITE_SECRET_KEY
+        ).toString(CryptoJS.enc.Utf8);
+        socket.emit("new message", data);
+        data.content = decryptedMessage; // Update the message content to decrypted value
         setNewMessage("");
 
-        console.log(data);
-        
         setMessages([...messages, data]);
       } catch (error) {
         toast({

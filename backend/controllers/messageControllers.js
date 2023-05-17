@@ -46,7 +46,7 @@ const allMessage = asyncHandler(async (req, res) => {
   // Check if the user has access to the chat
   const isUserInChat = await Chat.exists({
     _id: chatId,
-    users: { $elemMatch: { $eq: userId } }
+    users: { $elemMatch: { $eq: userId } },
   });
 
   if (!isUserInChat) {
@@ -65,8 +65,5 @@ const allMessage = asyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
-
-
-
 
 module.exports = { sendMessage, allMessage };

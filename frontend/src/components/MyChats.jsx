@@ -8,6 +8,7 @@ import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
+import CryptoJS from "crypto-js"; // Import the crypto-js library
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
@@ -17,7 +18,6 @@ const MyChats = ({ fetchAgain }) => {
   const toast = useToast();
 
   const fetchChats = async () => {
-    
     try {
       const config = {
         headers: {
@@ -37,6 +37,15 @@ const MyChats = ({ fetchAgain }) => {
         position: "bottom-left",
       });
     }
+  };
+
+  const decryptedMessage = (content) => {
+    const message = CryptoJS.AES.decrypt(
+      content,
+      // "encryptionSecretKey"
+      import.meta.env.VITE_SECRET_KEY
+    ).toString(CryptoJS.enc.Utf8);
+    return message;
   };
 
   useEffect(() => {
@@ -102,10 +111,16 @@ const MyChats = ({ fetchAgain }) => {
                 </Text>
                 {chat.latestMessage && (
                   <Text fontSize="xs">
-                    <b>{chat.latestMessage.sender.name} : </b>
-                    {chat.latestMessage.content.length > 50
-                      ? chat.latestMessage.content.substring(0, 51) + "..."
-                      : chat.latestMessage.content}
+                    {/* <b>{chat.latestMessage.sender.name} : </b> */}
+                    <b>
+                      {chat.latestMessage.sender._id === user._id
+                        ? "You"
+                        : chat.latestMessage.sender.name}{" "}
+                      :{" "}
+                    </b>
+                    {decryptedMessage(chat.latestMessage.content) > 50
+                      ? decryptedMessage(chat.latestMessage.content)
+                      : decryptedMessage(chat.latestMessage.content)}
                   </Text>
                 )}
               </Box>
