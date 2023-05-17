@@ -1,3 +1,5 @@
+# MERN SECURE CHAT
+
 ## dependencies
 
 At Root folder
@@ -19,10 +21,19 @@ At frontend folder
 - react-router-dom
 - socket.io-client
 
+## Set up project on your environment
+
+```
+// at root folder
+npm i
+cd frontend
+npm i
+```
+
 ## to start the server
 
 ```
-cd..
+// at root folder
 npm start
 ```
 
