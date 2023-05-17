@@ -32,6 +32,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
+ 
 
   const { user, selectedChat, setSelectedChat, notification, setNotification } =
     ChatState();
@@ -57,7 +58,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const decryptedMessages = data.map((message) => {
       const decryptedContent = CryptoJS.AES.decrypt(
         message.content,
-        "encryptionSecretKey"
+        import.meta.env.VITE_SECRET
       ).toString(CryptoJS.enc.Utf8);
 
       return {
@@ -126,9 +127,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
          // Encrypt the message using AES
       const encryptedMessage = CryptoJS.AES.encrypt(
         newMessage,
-        "encryptionSecretKey"
+        import.meta.env.VITE_SECRET
       ).toString();
-
+      console.log(import.meta.env.VITE_SECRET);
         setNewMessage("");
         const { data } = await axios.post(
           "/api/message",
@@ -142,8 +143,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           // Decrypt the received message
       const decryptedMessage = CryptoJS.AES.decrypt(
         data.content,
-        "encryptionSecretKey"
+        import.meta.env.VITE_SECRET
       ).toString(CryptoJS.enc.Utf8);
+      console.log(import.meta.env.VITE_SECRET);
       socket.emit("new message", data);
       data.content = decryptedMessage; // Update the message content to decrypted value
         setNewMessage("");
