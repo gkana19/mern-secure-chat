@@ -40,7 +40,23 @@ const sendMessage = asyncHandler(async (req, res) => {
 
 const allMessage = asyncHandler(async (req, res) => {
   try {
-    const messages = await Message.find({ chat: req.params.chatId })
+    // Get the chat ID from the request parameters
+    const chatId = req.params.chatId;
+
+    // Get the user ID from the authenticated user (assuming you have implemented authentication middleware)
+    const userId = req.user._id;
+
+    // Check if the user is a member of the chat
+    const isMember = await Chat.exists({ _id: chatId, members: userId });
+    if (!isMember) {
+      res.status(403); // Forbidden
+      // console.log("You are not authorized to access this chat.");
+      throw new Error("You are not authorized to access this chat.");
+
+    }
+
+    // Retrieve the messages for the chat
+    const messages = await Message.find({ chat: chatId })
       .populate("sender", "name pic email")
       .populate("chat");
 
