@@ -18,6 +18,7 @@ import axios from "axios";
 import "./SingleChat.css";
 import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
+import CryptoJS from "crypto-js"; // Import the crypto-js library
 
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
@@ -51,7 +52,20 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         config
       );
 
-      setMessages(data);
+       // Decrypt the messages
+    const decryptedMessages = data.map((message) => {
+      const decryptedContent = CryptoJS.AES.decrypt(
+        message.content,
+        "encryptionSecretKey"
+      ).toString(CryptoJS.enc.Utf8);
+
+      return {
+        ...message,
+        content: decryptedContent,
+      };
+    });
+      
+      setMessages(decryptedMessages);
       setLoading(false);
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
@@ -108,19 +122,33 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
         };
 
+         // Encrypt the message using AES
+      const encryptedMessage = CryptoJS.AES.encrypt(
+        newMessage,
+        "encryptionSecretKey"
+      ).toString();
+
         setNewMessage("");
         const { data } = await axios.post(
           "/api/message",
           {
-            content: newMessage,
+            content: encryptedMessage,
             chatId: selectedChat._id,
           },
           config
         );
-
+        
+          // Decrypt the received message
+      const decryptedMessage = CryptoJS.AES.decrypt(
+        data.content,
+        "encryptionSecretKey"
+      ).toString(CryptoJS.enc.Utf8);
+      socket.emit("new message", data);
+      data.content = decryptedMessage; // Update the message content to decrypted value
         setNewMessage("");
 
-        socket.emit("new message", data);
+        console.log(data);
+        
         setMessages([...messages, data]);
       } catch (error) {
         toast({
