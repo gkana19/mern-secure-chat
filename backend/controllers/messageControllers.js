@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
+const { protect } = require("../middleware/authMiddleware");
 
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
@@ -39,21 +40,21 @@ const sendMessage = asyncHandler(async (req, res) => {
 });
 
 const allMessage = asyncHandler(async (req, res) => {
+  const { chatId } = req.params;
+  const userId = req.user._id;
+
+  // Check if the user has access to the chat
+  const isUserInChat = await Chat.exists({
+    _id: chatId,
+    users: { $elemMatch: { $eq: userId } }
+  });
+
+  if (!isUserInChat) {
+    res.status(403);
+    throw new Error("You are not authorized to access this chat.");
+  }
+
   try {
-    const chatId = req.params.chatId;
-    const userId = req.user._id; // Get the authenticated user's ID
-
-    // Check if the user is a member of the chat
-    const isMember = await Chat.exists({
-      _id: chatId,
-      users: userId
-    });
-
-    if (!isMember) {
-      res.status(403);
-      throw new Error('Access denied. User is not a member of the chat.');
-    }
-
     const messages = await Message.find({ chat: chatId })
       .populate("sender", "name pic email")
       .populate("chat");
@@ -64,5 +65,8 @@ const allMessage = asyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
+
+
+
 
 module.exports = { sendMessage, allMessage };

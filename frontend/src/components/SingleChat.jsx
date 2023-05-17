@@ -20,6 +20,7 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 import CryptoJS from "crypto-js"; // Import the crypto-js library
 
+
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 

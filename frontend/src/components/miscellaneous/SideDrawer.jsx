@@ -7,6 +7,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
+  Icon,
   Input,
   Menu,
   MenuButton,
@@ -19,6 +20,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { MdOutlineLogout } from "react-icons/md";
+import { CgProfile } from "react-icons/cg";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { ChatState } from "../../Context/ChatProvider";
@@ -76,7 +79,6 @@ const SideDrawer = () => {
       const { data } = await axios.get(`/api/user?search=${search}`, config);
       setLoading(false);
       setSearchResult(data);
-      // setSearch("");
     } catch (error) {
       toast({
         title: "Error Occured",
@@ -129,24 +131,39 @@ const SideDrawer = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
+        backgroundColor={"white"}
         w="100%"
         p="5px 10px 5px 10px"
-        borderWidth="5px">
+        borderWidth="4px">
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <i className="fas fa-search"></i>
-            <Text display={{ base: "none", md: "flex" }}> Search User</Text>
+            <Text
+              display={{ base: "none", md: "flex" }}
+              ml={1}
+              fontWeight="semibold">
+              Search User
+            </Text>
           </Button>
         </Tooltip>
 
-        <Text fontSize="2xl" fontFamily="Work sans">
-          Talk-A-Tive
+        <Text fontSize="2xl" fontFamily="Work sans" fontWeight="bold">
+          Super Secure Chat App
         </Text>
 
         <div>
           <Menu>
             <MenuButton p={1}>
-              <BellIcon fontSize="2xl" m={1} />
+              <BellIcon
+                fontSize="2xl"
+                m={1}
+                style={{
+                  color:
+                    !notification.length && "No New Messages"
+                      ? "#000000"
+                      : "#E76161",
+                }}
+              />
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No New Messages"}
@@ -174,11 +191,33 @@ const SideDrawer = () => {
               />
             </MenuButton>
             <MenuList>
+              <MenuItem
+                borderRadius="lg"
+                borderWidth="1px"
+                w="96%"
+                ml={1}
+                mb={2}
+                shadow="md">
+                <Avatar
+                  size="sm"
+                  cursor="pointer"
+                  mr={2}
+                  name={user.name}
+                  src={user.pic}
+                />
+                <Text fontWeight="semibold">{user.name}</Text>
+              </MenuItem>
               <ProfileModal user={user}>
-                <MenuItem>My Profile</MenuItem>
+                <MenuItem>
+                  <Icon as={CgProfile} mr={2} boxSize={6} />
+                  My Profile
+                </MenuItem>
               </ProfileModal>
               <MenuDivider />
-              <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+              <MenuItem onClick={logoutHandler}>
+                <Icon as={MdOutlineLogout} mr={2} boxSize={6} />
+                Logout
+              </MenuItem>
             </MenuList>
           </Menu>
         </div>
