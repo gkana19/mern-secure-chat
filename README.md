@@ -30,6 +30,13 @@ cd frontend
 npm i
 ```
 
+Then set up your environment by create `.env` file and configure this following variable
+
+- **PORT** add your server port.
+- **MONGO_URI** add your connection string into your application code
+- **DB_NAME** add your database name
+- **JWT_SECRET** add your secret json web token it can be anything
+
 ## to start the server
 
 ```
