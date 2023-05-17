@@ -128,7 +128,7 @@ const GroupChatModal = ({ children }) => {
   };
 
   const handleOnClose = () => {
-    console.log(selectedUsers);
+
     setSearchResult([]);
     setSelectedUsers([]);
     onClose();

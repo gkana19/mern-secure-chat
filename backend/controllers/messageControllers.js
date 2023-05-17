@@ -50,7 +50,7 @@ const allMessage = asyncHandler(async (req, res) => {
     const isMember = await Chat.exists({ _id: chatId, members: userId });
     if (!isMember) {
       res.status(403); // Forbidden
-      // console.log("You are not authorized to access this chat.");
+    
       throw new Error("You are not authorized to access this chat.");
 
     }
