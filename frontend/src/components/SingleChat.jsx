@@ -20,7 +20,7 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 import CryptoJS from "crypto-js"; // Import the crypto-js library
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://super-secure-chat.herokuapp.com/";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
