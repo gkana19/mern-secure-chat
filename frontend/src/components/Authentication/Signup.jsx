@@ -37,7 +37,7 @@ const Signup = () => {
       });
       return;
     }
-    
+
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
@@ -116,7 +116,7 @@ const Signup = () => {
 
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-      history.push("/chats");
+      history.go("/chats");
     } catch (error) {
       toast({
         title: "Error Occured",
@@ -182,7 +182,7 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
 
-      <FormControl id="pic" >
+      <FormControl id="pic">
         <FormLabel>Upload Your Picture</FormLabel>
         <Input
           type="file"
