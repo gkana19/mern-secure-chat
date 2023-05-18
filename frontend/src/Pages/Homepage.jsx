@@ -34,7 +34,7 @@ const Homepage = () => {
         borderRadius="lg"
         borderWidth="1px">
         <Text fontSize="4xl" fontFamily="Work sans">
-          Talk-A-Tive
+          Super Secure Chat App
         </Text>
       </Box>
       <Box

@@ -119,7 +119,10 @@ const MyChats = ({ fetchAgain }) => {
                       :{" "}
                     </b>
                     {decryptedMessage(chat.latestMessage.content) > 50
-                      ? decryptedMessage(chat.latestMessage.content)
+                      ? decryptedMessage(chat.latestMessage.content).slice(
+                          0,
+                          20
+                        ) + "..."
                       : decryptedMessage(chat.latestMessage.content)}
                   </Text>
                 )}
